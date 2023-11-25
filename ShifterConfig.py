@@ -20,7 +20,7 @@ def joystick_lister():
 
     pygame.joystick.init()
     num_joy = pygame.joystick.get_count()
-    joys = []
+    joys = []    
     for i in range(num_joy):
         joy = pygame.joystick.Joystick(i)
         joy_id = joy.get_name()

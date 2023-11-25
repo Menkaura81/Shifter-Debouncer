@@ -123,18 +123,20 @@ def gears(gear):
 # Run anyshift joystick loop                       
 def run_any():   
 
-    # Read the actual configuration displayed
-    read_options_from_windows()
-    
-    # Update button text
-    app.run_button.config(text="Debouncer running. Press 'End' to stop")
-    app.update()    
+    if len(joys) != 0:  # First check if there are devices connected
 
-    # Run debouncer
-    debouncer(options)
+        # Read the actual configuration displayed
+        read_options_from_windows()
+        
+        # Update button text
+        app.run_button.config(text="Debouncer running. Press 'End' to stop")
+        app.update()    
 
-    # Return button to normal text when done
-    app.run_button.config(text="Run Shifter Debouncer")    
+        # Run debouncer
+        debouncer(options)
+
+        # Return button to normal text when done
+        app.run_button.config(text="Run Shifter Debouncer")    
    
 
 # Tkinter window class
@@ -152,7 +154,7 @@ class GUI(Tk):
         self.frame.pack()
 
         # Joystick selection
-        self.joystick_frame = LabelFrame(self.frame, text = "Joysticks selection")
+        self.joystick_frame = LabelFrame(self.frame, text = "Joysticks Selection")
         self.joystick_frame.grid(row = 0, column = 0, columnspan = 2, padx= 10, pady = 5)
         
         # No joystick connected check
@@ -164,12 +166,21 @@ class GUI(Tk):
             self.joystick_id_combobox.grid(row = 1, column = 0)
             
         except:
-            error_label = Label(self.joystick_frame, text = "No devices connected.")
-            error_label.grid(row = 0, column = 0)
-            error_label = Label(self.joystick_frame, text = "Connect at least one device")
-            error_label.grid(row = 1, column = 0)
-            error_label = Label(self.joystick_frame, text = "and launch Anyshift again")
-            error_label.grid(row = 2, column = 0)
+            # Case no devices connected
+            if len(joys) == 0:
+                error_label = Label(self.joystick_frame, text = "No devices connected.")
+                error_label.grid(row = 0, column = 0)
+                error_label = Label(self.joystick_frame, text = "Connect at least one device")
+                error_label.grid(row = 1, column = 0)
+                error_label = Label(self.joystick_frame, text = "and launch Anyshift again")
+                error_label.grid(row = 2, column = 0)
+            # Case .ini device not coneccted, it default to joy_id = 0
+            else:
+                self.shifter_label = Label(self.joystick_frame, text="Shifter")
+                self.shifter_label.grid(row=0, column=0)
+                self.joystick_id_combobox = ttk.Combobox(self.joystick_frame, values=joys)
+                self.joystick_id_combobox.current(0)
+                self.joystick_id_combobox.grid(row = 1, column = 0)
                 
 
         # Joystick buttons selection
