@@ -37,8 +37,10 @@ def debouncer(options):
             if event.type == pygame.JOYBUTTONDOWN:
                 if shifter.get_button(options['up_button']) == True:
                     KeyPress_up(options)
+                    time.sleep(float(options['debounce_time']))
                 if shifter.get_button(options['down_button']) == True:
                     KeyPress_down(options)
+                    time.sleep(float(options['debounce_time']))
                 
         # Escape to exit from Anyshift    
         if keyboard.is_pressed('End'):
